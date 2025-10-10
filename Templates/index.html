@@ -7,36 +7,14 @@
     
     <div class="solutions-container">
         <h2>Solutions</h2>
-        <div id="solutions-list">
+        <div id="solutionsList">
             Loading solutions...
         </div>
     </div>
 
 <script>
-    // Fetch and display solutions
-    fetch('/api/solutions')
-        .then(response => response.json())
-        .then(data => {
-            const solutionsList = document.getElementById('solutions-list');
-            if (data.length === 0) {
-                solutionsList.innerHTML = '<p>No solutions found.</p>';
-            } else {
-                solutionsList.innerHTML = data.map(solution => `
-                    <div class="card" data-solution-id="${solution.id}">
-                        <div class="card-header">${solution.name}</div>
-                        <div class="card-description">${solution.description || 'No description'}</div>
-                        <div class="card-meta">Created: ${solution.created_at}</div>
-                        <button onclick="loadFlowsForSolution(${solution.id})">Show Flows</button>
-                        <div class="flows-list" id="solution-flows-${solution.id}" style="display: none;"></div>
-                    </div>
-                `).join('');
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching solutions:', error);
-            document.getElementById('solutions-list').innerHTML = '<p>Error loading solutions.</p>';
-        });
-        
+     const solutionsList = document.getElementById('solutionsList');   
+
     // Function to load flows for a specific solution
     function loadFlowsForSolution(solutionId) {
         const flowsContainer = document.getElementById(`solution-flows-${solutionId}`);
@@ -74,5 +52,33 @@
             flowsContainer.style.display = 'none';
         }
     }
+
+    // 1. First, load solutions and create the card HTML
+fetch('/api/solutions')
+    .then(response => response.json())
+    .then(data => {
+        solutionsList.innerHTML = data.map(solution => `
+            <div class="card">
+                <!-- ... card content ... -->
+                <div class="card-header">${solution.name}</div>
+                <div class="card-description">${solution.description || 'No description'}</div>
+                <button onclick="loadFlowsForSolution(${solution.id})">Show Flows</button>
+                <button class="create-flow-btn" onclick="openCreateFlowModal(${solution.id})" style="display:none;">Create Flow</button>
+                <div class="flows-list" id="solution-flows-${solution.id}" style="display: none;"></div>
+            </div>
+        `).join('');
+        
+        // 2. After solutions are loaded, check feature flags and show buttons
+        return fetch('/api/features');
+    })
+    .then(response => response.json())
+    .then(features => {
+        if (features.create_flow) {
+            document.querySelectorAll('.create-flow-btn').forEach(btn => {
+                btn.style.display = 'inline-block';
+            });
+        }
+    });
+
 </script>
 {% endblock %}

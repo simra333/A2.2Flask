@@ -85,6 +85,49 @@ def get_flows_by_solution_for_api(conn, solution_id):
             else:
                 flow["assigned"] = "Unassigned"    
     return flows
+
+# API endpoint to create a flow
+@app.route('/api/flows', methods=['POST'])
+def create_flow():
+    """Create a new flow"""
+    # Check if feature is enabled
+    if not feature_flags.is_enabled('create_flow'):
+        return jsonify({"error": "Feature not enabled"}), 403
+    
+    conn = database.get_connection()
+    try:
+        data = request.get_json()
+        
+        # Validate required fields
+        required_fields = ['title', 'description', 'solution_id', 'priority', 'creator_id']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({"error": f"Missing required field: {field}"}), 400
+        
+        # Create flow using FlowHandler
+        handler = FlowHandler(conn)
+        success = handler.create_flow(
+            title=data['title'],
+            description=data['description'],
+            solution_id=data['solution_id'],
+            priority=data['priority'],
+            creator_id=data['creator_id']
+        )
+        
+        if success:
+            return jsonify({"message": "Flow created successfully"}), 201
+        else:
+            return jsonify({"error": "Failed to create flow"}), 500
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
+
+# NEW: API endpoint to check feature flags
+@app.route('/api/features', methods=['GET'])
+def get_features():
+    """Return current feature flag status"""
+    return jsonify(feature_flags.flags)
 		
 if __name__ == "__main__":
 	with app.app_context():
