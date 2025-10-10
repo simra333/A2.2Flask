@@ -1,0 +1,47 @@
+/* Card styling from template */
+.solutions-container, .flows-container {
+  margin: 20px 0;
+}
+
+.card {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 15px;
+  background-color: white;
+}
+
+.card-header {
+  font-weight: bold;
+  margin-bottom: 10px;
+  font-size: 1.2em;
+}
+
+.card-description {
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.card-meta {
+  font-size: 0.8em;
+  color: #777;
+}
+
+.flows-list {
+  margin-top: 15px;
+}
+
+/* General styling */
+body {
+  font-family: 'Roboto', 'Helvetica Neue', sans-serif;
+  background-color: hwb(0 99% 1%);
+  color: #000000;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+}
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}

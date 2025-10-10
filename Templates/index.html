@@ -1,0 +1,78 @@
+<!-- templates/index.html -->
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="content">
+    <h1>Power Automate Flow Logger</h1>
+    
+    <div class="solutions-container">
+        <h2>Solutions</h2>
+        <div id="solutions-list">
+            Loading solutions...
+        </div>
+    </div>
+
+<script>
+    // Fetch and display solutions
+    fetch('/api/solutions')
+        .then(response => response.json())
+        .then(data => {
+            const solutionsList = document.getElementById('solutions-list');
+            if (data.length === 0) {
+                solutionsList.innerHTML = '<p>No solutions found.</p>';
+            } else {
+                solutionsList.innerHTML = data.map(solution => `
+                    <div class="card" data-solution-id="${solution.id}">
+                        <div class="card-header">${solution.name}</div>
+                        <div class="card-description">${solution.description || 'No description'}</div>
+                        <div class="card-meta">Created: ${solution.created_at}</div>
+                        <button onclick="loadFlowsForSolution(${solution.id})">Show Flows</button>
+                        <div class="flows-list" id="solution-flows-${solution.id}" style="display: none;"></div>
+                    </div>
+                `).join('');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching solutions:', error);
+            document.getElementById('solutions-list').innerHTML = '<p>Error loading solutions.</p>';
+        });
+        
+    // Function to load flows for a specific solution
+    function loadFlowsForSolution(solutionId) {
+        const flowsContainer = document.getElementById(`solution-flows-${solutionId}`);
+        
+        // Toggle visibility
+        if (flowsContainer.style.display === 'none') {
+            flowsContainer.style.display = 'block';
+            
+            // Fetch flows for this solution
+            fetch(`/api/solutions/${solutionId}/flows`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length === 0) {
+                        flowsContainer.innerHTML = '<p>No flows found for this solution.</p>';
+                    } else {
+                        flowsContainer.innerHTML = '<h3>Flows in this Solution:</h3>' + data.map(flow => `
+                            <div class="card" style="margin-left: 20px;">
+                                <div class="card-header">${flow.name}</div>
+                                <div class="card-description">${flow.description || 'No description'}</div>
+                                <div class="card-meta">
+                                    Status: ${flow.status}<br>
+                                    Priority: ${flow.priority}<br>
+                                    Assigned To: ${flow.assigned}<br>
+                                    Created: ${flow.created_at}
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching flows for solution:', error);
+                    flowsContainer.innerHTML = '<p>Error loading flows for this solution.</p>';
+                });
+        } else {
+            flowsContainer.style.display = 'none';
+        }
+    }
+</script>
+{% endblock %}
