@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, redirect, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from logger import database
+from logger.flow_handler import FlowHandler
+from logger.feature_flags import feature_flags
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
