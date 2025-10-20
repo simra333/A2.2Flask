@@ -15,7 +15,7 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh 'py -m logger.test_flow_logger'
+                sh 'python3 -m logger.test_flow_logger'
             }
         }
     }
