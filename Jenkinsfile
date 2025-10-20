@@ -1,9 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'python:3.9'
-        }
-    }
+    agent any
 
     stages {
         stage('Checkout') {
@@ -15,12 +11,12 @@ pipeline {
         stage('Build') {
             steps {
                 sh 'echo Building the application...'
+                sh 'python3 -m pip install -r requirements.txt'
             }
         }
         stage('Test') {
             steps {
                 sh 'python3 -m logger.test_flow_logger'
-                sh 'python3 -m pip install -r requirements.txt'
             }
         }
     }
