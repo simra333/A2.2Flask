@@ -13,17 +13,9 @@ pipeline {
                 sh 'echo Building the application...'
             }
         }
-
-        stage('Docker Build') {
+        stage('Test') {
             steps {
-                sh 'docker build -t PythonApp:latest .'
-            }
-        }
-
-        stage('Push Image') {
-            steps {
-                sh 'docker tag PythonApp:latest simraabid/PythonApp:latest'
-                sh 'docker push simraabid/PythonApp:latest'
+                sh 'py -m logger.test_flow_logger'
             }
         }
     }
