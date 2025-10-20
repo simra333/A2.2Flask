@@ -16,7 +16,6 @@ pipeline {
         stage('Test') {
             steps {
                 sh 'python3 -m logger.test_flow_logger'
-                sh 'python3 -m venv venv'
                 sh 'python3 -m pip install -r requirements.txt'
             }
         }
