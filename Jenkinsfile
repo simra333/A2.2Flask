@@ -18,6 +18,7 @@ pipeline {
         stage('Test') {
             steps {
                 sh '. venv/bin/activate && python -m logger.test_flow_logger'
+                sh 'echo Test completed successfully!'
             }
         }
     }
