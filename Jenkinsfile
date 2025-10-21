@@ -12,12 +12,12 @@ pipeline {
             steps {
                 sh 'echo Building the application...'
                 sh 'python3 -m venv venv'
-                sh 'python3 -m pip install -r requirements.txt'
+                sh '. venv/bin/activate && python3 -m pip install -r requirements.txt'
             }
         }
         stage('Test') {
             steps {
-                sh 'python3 -m logger.test_flow_logger'
+                sh '. venv/bin/activate && python -m logger.test_flow_logger'
             }
         }
     }
