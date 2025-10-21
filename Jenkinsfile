@@ -11,6 +11,7 @@ pipeline {
         stage('Build') {
             steps {
                 sh 'echo Building the application...'
+                sh 'python3 -m venv venv'
                 sh 'python3 -m pip install -r requirements.txt'
             }
         }
