@@ -21,5 +21,10 @@ pipeline {
                 sh 'echo Test completed successfully!'
             }
         }
+        stage('Docker Build') {
+            steps {
+                sh 'docker build -t PythonApp:latest .'
+            }
+        }
     }
 }
