@@ -26,5 +26,30 @@ pipeline {
                 sh 'docker build -t pythonapp:latest .'
             }
         }
+        stage('Docker Push') {
+            steps {
+                sh 'docker tag pythonapp:latest simraabid/pythonapp:latest'
+                sh 'docker push simraabid/pythonapp:latest'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh 'echo Stopping old container...'
+                sh 'docker stop pythonapp-container || true'
+                sh 'docker rm pythonapp-container || true'
+                
+                sh 'echo Starting new container...'
+                sh 'docker run -d --name pythonapp-container -p 5000:5000 pythonapp:latest'
+            }
+        }
+    }
+
+    post {
+        success {
+            sh 'echo Deployment successful!'
+        }
+        failure {
+            sh 'echo Pipeline failed!'
+        }
     }
 }
