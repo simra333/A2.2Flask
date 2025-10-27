@@ -32,14 +32,14 @@ pipeline {
                 sh 'docker push simraabid/pythonapp:latest'
             }
         }
-        stage('Deploy') {
+        stage('Deploy to Kubernetes') {
             steps {
-                sh 'echo Stopping old container...'
-                sh 'docker stop pythonapp-container || true'
-                sh 'docker rm pythonapp-container || true'
-                
-                sh 'echo Starting new container...'
-                sh 'docker run -d --name pythonapp-container -p 5000:5000 pythonapp:latest'
+                sh '''
+                    kubectl apply -f k8s-deployment.yaml
+                    kubectl rollout status deployment/pythonapp-deployment
+                    kubectl get pods
+                    kubectl get services
+                '''
             }
         }
     }

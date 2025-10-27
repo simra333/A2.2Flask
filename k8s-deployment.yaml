@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment 
+metdadata:
+  name: pythonapp-deployment
+  labels:
+    app: pythonapp
+
+spec:
+  replicas: 3
+  selector
+    matchLabels:
+      app: pythonapp
+
+template:
+  metadata:
+    labels:
+      app: pythonapp
+    spec:
+      containers:
+      - name: pythonapp
+        image: simraabid/pythonapp:latest
+        ports:
+        - containerPort: 5000
+        imagePullPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pythonapp-service
+
+spec: 
+  type: NodePort
+  selector:
+    app: pythonapp
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+      nodePort: 30080
