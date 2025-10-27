@@ -9,10 +9,10 @@ spec:
   selector:
     matchLabels:
       app: pythonapp
-template:
-  metadata:
-    labels:
-      app: pythonapp
+  template:
+    metadata:
+      labels:
+        app: pythonapp
     spec:
       containers:
       - name: pythonapp
