@@ -1,16 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment 
-metdadata:
+metadata:
   name: pythonapp-deployment
   labels:
     app: pythonapp
-
 spec:
   replicas: 3
   selector:
     matchLabels:
       app: pythonapp
-
 template:
   metadata:
     labels:
@@ -22,13 +20,11 @@ template:
         ports:
         - containerPort: 5000
         imagePullPolicy: Always
-
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: pythonapp-service
-
 spec: 
   type: NodePort
   selector:
