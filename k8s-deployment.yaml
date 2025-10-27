@@ -7,7 +7,7 @@ metdadata:
 
 spec:
   replicas: 3
-  selector
+  selector:
     matchLabels:
       app: pythonapp
 
