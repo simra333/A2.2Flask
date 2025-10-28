@@ -26,6 +26,15 @@ pipeline {
                 sh 'docker build -t pythonapp:latest .'
             }
         }
+        stage('vulnerability scanning') {
+            steps {
+                sh '''
+                    # Install and run Trivy
+                    docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+                        aquasec/trivy image --severity HIGH,CRITICAL pythonapp:latest
+                '''
+            }
+        }
         stage('Docker Push') {
             steps {
                 sh 'docker tag pythonapp:latest simraabid/pythonapp:latest'
