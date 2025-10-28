@@ -45,11 +45,22 @@ pipeline {
     }
 
     post {
+        always {
+            sh '''
+                echo "Final Pipeline Status:"
+                kubectl get all
+                kubectl -l app=pythonapp --tail=100 || true
+            '''
+        }
         success {
             sh 'echo Deployment successful!'
         }
         failure {
-            sh 'echo Pipeline failed!'
+            sh '''
+                echo Pipeline failed! Checking logs...
+                kubectl describe pods -l app=pythonapp
+                kubectl logs -l app=pythonapp --tail=200'
+            '''
         }
     }
 }
