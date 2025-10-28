@@ -49,7 +49,7 @@ pipeline {
             sh '''
                 echo "Final Pipeline Status:"
                 kubectl get all
-                kubectl -l app=pythonapp --tail=100 || true
+                kubectl logs -l app=pythonapp --tail=100 || true
             '''
         }
         success {
