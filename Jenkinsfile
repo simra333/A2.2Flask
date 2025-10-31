@@ -23,10 +23,11 @@ pipeline {
         }
         stage('Docker Build') {
             steps {
-                dir('/home/A2.2Flask')
+                dir('/home/A2.2Flask') {
                     sh 'docker build -t pythonapp:latest .'
                 }
             }
+        }
         stage('vulnerability scanning') {
             steps {
                 sh '''
@@ -69,7 +70,7 @@ pipeline {
             sh '''
                 echo Pipeline failed! Checking logs...
                 kubectl describe pods -l app=pythonapp
-                kubectl logs -l app=pythonapp --tail=200'
+                kubectl logs -l app=pythonapp --tail=200
             '''
         }
     }
