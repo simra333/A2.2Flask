@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    environment {
+        APP_VERSION = 'v1.0'
+        DOCKER_IMAGE = "simraabid/pythonapp:${APP_VERSION}"
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -25,7 +30,7 @@ pipeline {
             steps {
                 sh '''
                     cd /home/A2.2Flask
-                    docker build --no-cache -t simraabid/pythonapp:latest .
+                    docker build -t ${DOCKER_IMAGE} .
                 '''
                 }
             }
@@ -34,20 +39,19 @@ pipeline {
                 sh '''
                     # Install and run Trivy
                     docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
-                        aquasec/trivy image --severity HIGH,CRITICAL pythonapp:latest
+                        aquasec/trivy image --severity HIGH,CRITICAL ${DOCKER_IMAGE}
                 '''
             }
         }
         stage('Docker Push') {
             steps {
-                sh 'docker tag pythonapp:latest simraabid/pythonapp:latest'
-                sh 'docker push simraabid/pythonapp:latest'
+                sh 'docker push ${DOCKER_IMAGE}'
             }
         }
         stage('Deploy to Kubernetes') {
             steps {
                 sh '''
-                    kubectl apply -f k8s-deployment.yaml
+                    kubectl set image deployment/pythonapp-deployment pythonapp=${DOCKER_IMAGE}
                     kubectl rollout status deployment/pythonapp-deployment
                     kubectl get pods
                     kubectl get services
