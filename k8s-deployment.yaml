@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: pythonapp
-        image: simraabid/pythonapp:latest
+        image: simraabid/pythonapp:v1.0
         ports:
         - containerPort: 5000
         imagePullPolicy: Always
