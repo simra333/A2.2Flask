@@ -27,7 +27,6 @@ pipeline {
                     sh 'docker build -t pythonapp:latest .'
                 }
             }
-        }
         stage('vulnerability scanning') {
             steps {
                 sh '''
