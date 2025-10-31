@@ -23,9 +23,10 @@ pipeline {
         }
         stage('Docker Build') {
             steps {
-                dir('/home/A2.2Flask') {
-                    sh 'docker build -t pythonapp:latest .'
-                }
+                sh '''
+                    cd /home/A2.2Flask
+                    sh 'docker build -t simraabid/pythonapp:latest .'
+                '''
             }
         }
         stage('vulnerability scanning') {
