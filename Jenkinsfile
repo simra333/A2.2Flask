@@ -25,10 +25,10 @@ pipeline {
             steps {
                 sh '''
                     cd /home/A2.2Flask
-                    sh 'docker build -t simraabid/pythonapp:latest .'
+                    docker build -t simraabid/pythonapp:latest .
                 '''
+                }
             }
-        }
         stage('vulnerability scanning') {
             steps {
                 sh '''
