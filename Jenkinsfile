@@ -23,7 +23,9 @@ pipeline {
         }
         stage('Docker Build') {
             steps {
-                sh 'docker build -t pythonapp:latest .'
+                dir('/home/A2.2Flask')
+                    sh 'docker build -t pythonapp:latest .'
+                }
             }
         }
         stage('vulnerability scanning') {
