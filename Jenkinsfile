@@ -25,7 +25,7 @@ pipeline {
             steps {
                 sh '''
                     cd /home/A2.2Flask
-                    docker build -t simraabid/pythonapp:latest .
+                    docker build --no cache -t simraabid/pythonapp:latest .
                 '''
                 }
             }
