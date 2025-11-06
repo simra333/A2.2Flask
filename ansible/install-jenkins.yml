@@ -9,20 +9,18 @@
 
     - name: Install Java (Jenkins requirement)
       apt:
-        name: fontconfig openjdk-21-jre
+        name: openjdk-17-jdk
         state: present
 
-    - name: Download Jenkins apt repository key
-      get_url:
+    - name: Add Jenkins apt repository key
+      apt_key:
         url: https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
-        dest: /etc/apt/keyrings/jenkins-keyring.asc
-        mode: '0644'
+        state: present
 
     - name: Add Jenkins apt repository
       apt_repository:
         repo: deb https://pkg.jenkins.io/debian-stable binary/
         state: present
-        filename: jenkins
 
     - name: Update apt cache after adding Jenkins repo
       apt:
