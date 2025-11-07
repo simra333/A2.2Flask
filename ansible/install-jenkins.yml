@@ -44,10 +44,6 @@
         port: 8080
         delay: 10
 
-    - name: Get Jenkins initial admin password
-      register: jenkins_password
-      changed_when: false
-
     - name: Display initial admin password
       debug:
-        msg: "Jenkins initial admin password: {{ Jenkins_admin_password }}"
+        msg: "Jenkins initial admin password: {{ jenkins_admin_password }}"
