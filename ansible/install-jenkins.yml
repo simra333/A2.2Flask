@@ -9,7 +9,7 @@
 
     - name: Install Java (Jenkins requirement)
       apt:
-        name: openjdk-17-jdk
+        name: openjdk-11-jdk
         state: present
 
     - name: Add Jenkins apt repository key
