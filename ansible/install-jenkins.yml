@@ -2,6 +2,8 @@
 - name: Install Jenkins on Ubuntu
   hosts: localhost
   become: yes
+  vars_files:
+    - secrets.yml
   tasks:
     - name: Update apt cache
       apt:
@@ -43,10 +45,9 @@
         delay: 10
 
     - name: Get Jenkins initial admin password
-      command: cat /var/lib/jenkins/secrets/initialAdminPassword
       register: jenkins_password
       changed_when: false
 
     - name: Display initial admin password
       debug:
-        msg: "Jenkins initial admin password: {{ jenkins_password.stdout }}"
+        msg: "Jenkins initial admin password: {{ Jenkins_admin_password }}"
