@@ -1,2 +1,44 @@
 ---
 # tasks file for roles/jenkins
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install Java (Jenkins requirement)
+      apt:
+        name: openjdk-17-jdk
+        state: present
+
+    - name: Add Jenkins apt repository key
+      apt_key:
+        url: https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+        state: present
+
+    - name: Add Jenkins apt repository
+      apt_repository:
+        repo: deb https://pkg.jenkins.io/debian-stable binary/
+        state: present
+
+    - name: Update apt cache after adding Jenkins repo
+      apt:
+        update_cache: yes
+
+    - name: Install Jenkins
+      apt:
+        name: jenkins
+        state: present
+
+    - name: Start Jenkins service
+      systemd:
+        name: jenkins
+        state: started
+        enabled: yes
+
+    - name: Wait for Jenkins to start
+      wait_for:
+        port: 8080
+        delay: 10
+
+    - name: Display initial admin password
+      debug:
+        msg: "Jenkins initial admin password: {{ jenkins_admin_password }}"
