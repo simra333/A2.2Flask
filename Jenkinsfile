@@ -29,6 +29,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
+                dir('A2.2Flask')
                 git branch: 'test', url: 'https://github.com/simra333/A2.2Flask.git'
             }
         }
@@ -57,7 +58,7 @@ pipeline {
             steps {
                 sh '''
                     echo "Building Docker image in: ${WORKSPACE}"
-                    docker build -t ${DOCKER_IMAGE} .
+                    docker build -t ${DOCKER_IMAGE} A2.2Flask/
                 '''
                 }
             }
