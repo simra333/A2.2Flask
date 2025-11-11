@@ -3,13 +3,33 @@ pipeline {
 
     environment {
         APP_VERSION = 'v1.0'
-        DOCKER_IMAGE = "simraabid/pythonapp:${APP_VERSION}"
+        DOCKERHUB_USERNAME = 'simraabid'
+        DOCKER_IMAGE = "${DOCKERHUB_USERNAME}/pythonapp:${APP_VERSION}"
+        AKS_CLUSTER_NAME = 'pythonapp-aks-cluster-sa'
+        AKS_RESOURCE_GROUP = 'A5.2-RG-Terraform'
     }
 
     stages {
+
+        stage('Verify kubectl Configuration') {
+            steps {
+                sh '''
+                    # Verify kubeconfig exists
+                    if [ ! -f ~/.kube/config ]; then
+                        echo "ERROR: kubeconfig not found at ~/.kube/config"
+                        exit 1
+                    fi
+                    
+                    # Verify kubectl can connect to cluster
+                    kubectl cluster-info
+                    kubectl get nodes
+                '''
+            }
+        }
+
         stage('Checkout') {
             steps {
-                git branch: 'jenkins-setup', url: 'https://github.com/simra333/A2.2Flask.git'
+                git branch: 'test', url: 'https://github.com/simra333/A2.2Flask.git'
             }
         }
 
@@ -29,7 +49,7 @@ pipeline {
         stage('Docker Build') {
             steps {
                 sh '''
-                    cd /home/A2.2Flask
+                    echo "Building Docker image in: ${WORKSPACE}"
                     docker build -t ${DOCKER_IMAGE} .
                 '''
                 }
@@ -43,12 +63,27 @@ pipeline {
                 '''
             }
         }
-        stage('Docker Push') {
+        stage('Docker Hub Login and Push') {
             steps {
-                sh 'docker push ${DOCKER_IMAGE}'
+                script {
+                    withCredentials([usernamePassword(
+                        credentialsId: 'dockerhub-credentials',
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_PASS'
+                    )]) {
+                        sh '''
+                            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                            docker push ${DOCKER_IMAGE}
+                            
+                            # Also tag and push as latest
+                            docker tag ${DOCKER_IMAGE} ${DOCKERHUB_USERNAME}/pythonapp:latest
+                            docker push ${DOCKERHUB_USERNAME}/pythonapp:latest
+                        '''
+                    }
+                }
             }
         }
-        stage('Deploy to Kubernetes') {
+        stage('Deploy to AKS') {
             steps {
                 sh '''
                     kubectl set image deployment/pythonapp-deployment pythonapp=${DOCKER_IMAGE}
