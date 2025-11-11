@@ -57,7 +57,7 @@ pipeline {
             steps {
                 sh '''
                     echo "Building Docker image in: ${WORKSPACE}"
-                    docker build -t ${DOCKER_IMAGE} A2.2Flask/
+                    docker build -t ${DOCKER_IMAGE} .
                 '''
                 }
             }
