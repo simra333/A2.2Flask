@@ -36,7 +36,6 @@ pipeline {
         stage('Build') {
             steps {
                 sh 'echo Building the application...'
-                sh 'curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg'
                 sh 'sudo apt-get update'
                 sh 'sudo apt-get install -y python3.10-venv'
                 sh 'python3 -m venv venv'
