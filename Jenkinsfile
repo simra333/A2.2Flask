@@ -89,10 +89,20 @@ pipeline {
         stage('Deploy to AKS') {
             steps {
                 sh '''
-                    kubectl set image deployment/pythonapp-deployment pythonapp=${DOCKER_IMAGE}
-                    kubectl rollout status deployment/pythonapp-deployment
+                    # Delete existing pods to force fresh image pull
+                    kubectl delete pods -l app=pythonapp
+
+                    # Wait for new pods to be ready
+                    kubectl wait --for=condition=ready pod -l app=pythonapp --timeout=300s
+
+                    # Verify deployment
                     kubectl get pods
+                    kubectl describe pod -l app=pythonapp | grep "Image:"
                     kubectl get services
+
+                    # Check if templates exist in running pod
+                    POD_NAME=$(kubectl get pod -l app=pythonapp -o jsonpath='{.items[0].metadata.name}')
+                    kubectl exec $POD_NAME -- ls -la /app/templates/
                 '''
             }
         }
