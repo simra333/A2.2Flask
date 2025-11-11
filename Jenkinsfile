@@ -81,10 +81,6 @@ pipeline {
                         sh '''
                             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
                             docker push ${DOCKER_IMAGE}
-                            
-                            # Also tag and push as latest
-                            docker tag ${DOCKER_IMAGE} ${DOCKERHUB_USERNAME}/${DOCKER_IMAGE}
-                            docker push ${DOCKERHUB_USERNAME}/${DOCKER_IMAGE}
                         '''
                     }
                 }
