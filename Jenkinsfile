@@ -35,11 +35,16 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'echo Building the application...'
-                sh 'sudo apt-get update'
-                sh 'sudo apt-get install -y python3.10-venv'
-                sh 'python3 -m venv venv'
-                sh '. venv/bin/activate && python3 -m pip install -r requirements.txt'
+                sh '''
+                    echo Building the application...
+                    sudo apt-get update
+                    sudo apt-get install -y python3.10-venv
+                    python3 -m venv venv
+                    . venv/bin/activate 
+                    pip install --upgrade pip
+                    pip install --upgrade setuptools>=78.1.1
+                    pip install -r requirements.txt
+                '''
             }
         }
         stage('Test') {
