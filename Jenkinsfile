@@ -78,8 +78,8 @@ pipeline {
                             docker push ${DOCKER_IMAGE}
                             
                             # Also tag and push as latest
-                            docker tag ${DOCKER_IMAGE} ${DOCKERHUB_USERNAME}/pythonapp:latest
-                            docker push ${DOCKERHUB_USERNAME}/pythonapp:latest
+                            docker tag ${DOCKER_IMAGE} ${DOCKERHUB_USERNAME}/${DOCKER_IMAGE}
+                            docker push ${DOCKERHUB_USERNAME}/${DOCKER_IMAGE}
                         '''
                     }
                 }
