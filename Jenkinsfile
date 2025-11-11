@@ -97,6 +97,12 @@ pipeline {
                     
                     # Wait for rollout to complete
                     kubectl rollout status deployment/pythonapp-deployment --timeout=300s
+
+                    # Wait for pods to be ready
+                    kubectl wait --for=condition=ready pod -l app=pythonapp --timeout=60s
+            
+                    # Give terminating pods time to fully terminate
+                    sleep 5
                     
                     # Verify deployment
                     kubectl get pods
