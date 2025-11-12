@@ -57,7 +57,7 @@ pipeline {
             steps {
                 sh '''
                     echo "Building Docker image in: ${WORKSPACE}"
-                    docker build -t ${DOCKER_IMAGE} .
+                    docker build --no-cache -t ${DOCKER_IMAGE} .
                 '''
                 }
             }
