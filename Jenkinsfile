@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        APP_VERSION = 'v2.0'
+        APP_VERSION = 'v2.1'
         DOCKERHUB_USERNAME = 'simraabid'
         DOCKER_IMAGE = "${DOCKERHUB_USERNAME}/pythonapp:${APP_VERSION}"
         AKS_CLUSTER_NAME = 'pythonapp-aks-cluster-sa'
